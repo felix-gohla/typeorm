@@ -2,15 +2,15 @@ import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { Server } from 'http';
 import * as request from 'supertest';
-import { AsyncConnectionFactoryOptionsFactoryModule } from '../src/async-connection-factory-options.module';
+import { AsyncDataSourceFactoryOptionsFactoryModule } from '../src/async-data-source-factory-options.module';
 
-describe('TypeOrm (async configuration with connectionFactory)', () => {
+describe('TypeOrm (async configuration with dataSourceFactory)', () => {
   let server: Server;
   let app: INestApplication;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      imports: [AsyncConnectionFactoryOptionsFactoryModule],
+      imports: [AsyncDataSourceFactoryOptionsFactoryModule],
     }).compile();
 
     app = module.createNestApplication();

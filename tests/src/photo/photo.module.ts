@@ -8,7 +8,7 @@ import { PhotoService } from './photo.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Photo, CustomPhotoRepository]),
-    TypeOrmModule.forFeature([Photo, CustomPhotoRepository], 'connection_2'),
+    TypeOrmModule.forFeature([Photo, CustomPhotoRepository], 'dataSource_2'),
   ],
   providers: [PhotoService],
   controllers: [PhotoController],

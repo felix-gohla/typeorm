@@ -1,34 +1,32 @@
 import { Provider } from '@nestjs/common';
 import {
-  AbstractRepository,
-  Connection,
-  ConnectionOptions,
+  DataSource,
+  DataSourceOptions,
   getMetadataArgsStorage,
   Repository,
 } from 'typeorm';
-import { getConnectionToken, getRepositoryToken } from './common/typeorm.utils';
+import { getDataSourceToken, getRepositoryToken } from './common/typeorm.utils';
 import { EntityClassOrSchema } from './interfaces/entity-class-or-schema.type';
 
 export function createTypeOrmProviders(
   entities?: EntityClassOrSchema[],
-  connection?: Connection | ConnectionOptions | string,
+  dataSource?: DataSource | DataSourceOptions | string,
 ): Provider[] {
   return (entities || []).map((entity) => ({
-    provide: getRepositoryToken(entity, connection),
-    useFactory: (connection: Connection) => {
+    provide: getRepositoryToken(entity, dataSource),
+    useFactory: (dataSource: DataSource) => {
       if (
         entity instanceof Function &&
-        (entity.prototype instanceof Repository ||
-          entity.prototype instanceof AbstractRepository)
+        entity.prototype instanceof Repository
       ) {
-        return connection.getCustomRepository(entity);
+        return dataSource.getRepository(entity);
       }
 
-      return connection.options.type === 'mongodb'
-        ? connection.getMongoRepository(entity)
-        : connection.getRepository(entity);
+      return dataSource.options.type === 'mongodb'
+        ? dataSource.getMongoRepository(entity)
+        : dataSource.getRepository(entity);
     },
-    inject: [getConnectionToken(connection)],
+    inject: [getDataSourceToken(dataSource)],
     /**
      * Extra property to workaround dynamic modules serialisation issue
      * that occurs when "TypeOrm#forFeature()" method is called with the same number

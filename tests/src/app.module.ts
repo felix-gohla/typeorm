@@ -20,7 +20,7 @@ import { PhotoModule } from './photo/photo.module';
     }),
     PhotoModule,
     TypeOrmModule.forRoot({
-      name: 'connection_2',
+      name: 'dataSource_2',
       type: 'postgres',
       host: '0.0.0.0',
       port: 3306,

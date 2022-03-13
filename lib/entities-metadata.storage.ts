@@ -1,25 +1,26 @@
-import { Connection, ConnectionOptions } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { getDataSourceName } from './common';
 import { EntityClassOrSchema } from './interfaces/entity-class-or-schema.type';
 
-type ConnectionToken = Connection | ConnectionOptions | string;
+type DataSourceToken = DataSource | DataSourceOptions | string;
 
 export class EntitiesMetadataStorage {
   private static readonly storage = new Map<string, EntityClassOrSchema[]>();
 
-  static addEntitiesByConnection(
-    connection: ConnectionToken,
+  static addEntitiesByDataSource(
+    dataSource: DataSourceToken,
     entities: EntityClassOrSchema[],
   ): void {
-    const connectionToken =
-      typeof connection === 'string' ? connection : connection.name;
-    if (!connectionToken) {
+    const dataSourceToken =
+      typeof dataSource === 'string' ? dataSource : getDataSourceName(dataSource);
+    if (!dataSourceToken) {
       return;
     }
 
-    let collection = this.storage.get(connectionToken);
+    let collection = this.storage.get(dataSourceToken);
     if (!collection) {
       collection = [];
-      this.storage.set(connectionToken, collection);
+      this.storage.set(dataSourceToken, collection);
     }
     entities.forEach((entity) => {
       if (collection!.includes(entity)) {
@@ -29,15 +30,15 @@ export class EntitiesMetadataStorage {
     });
   }
 
-  static getEntitiesByConnection(
-    connection: ConnectionToken,
+  static getEntitiesByDataSource(
+    dataSource: DataSourceToken,
   ): EntityClassOrSchema[] {
-    const connectionToken =
-      typeof connection === 'string' ? connection : connection.name;
+    const dataSourceToken =
+      typeof dataSource === 'string' ? dataSource : getDataSourceName(dataSource);
 
-    if (!connectionToken) {
+    if (!dataSourceToken) {
       return [];
     }
-    return this.storage.get(connectionToken) || [];
+    return this.storage.get(dataSourceToken) || [];
   }
 }

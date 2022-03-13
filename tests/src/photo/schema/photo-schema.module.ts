@@ -12,7 +12,7 @@ import { PhotoSchema } from './photo.schema';
     TypeOrmModule.forFeature([PhotoSchema, CustomPhotoSchemaRepository]),
     TypeOrmModule.forFeature(
       [PhotoSchema, CustomPhotoSchemaRepository],
-      'connection_2',
+      'dataSource_2',
     ),
   ],
   providers: [PhotoSchemaService],

@@ -11,11 +11,11 @@ export class PhotoSchemaService {
   constructor(
     @InjectRepository(PhotoWithoutTargetSchema)
     private readonly photoWithoutTargetRepository: Repository<Photo>,
-    @InjectRepository(PhotoSchema, 'connection_2')
+    @InjectRepository(PhotoSchema, 'dataSource_2')
     private readonly photoRepository2: Repository<Photo>,
     @InjectRepository(PhotoSchema)
     private readonly photoRepository: Repository<Photo>,
-    @InjectRepository(CustomPhotoSchemaRepository, 'connection_2')
+    @InjectRepository(CustomPhotoSchemaRepository, 'dataSource_2')
     private readonly customPhotoRepository2: CustomPhotoSchemaRepository,
     private readonly customPhotoRepository: CustomPhotoSchemaRepository,
   ) {}

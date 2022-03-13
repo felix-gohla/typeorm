@@ -1,5 +1,5 @@
 import { ModuleMetadata, Type } from '@nestjs/common';
-import { Connection, ConnectionOptions } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
 
 export type TypeOrmModuleOptions = {
   /**
@@ -8,7 +8,7 @@ export type TypeOrmModuleOptions = {
    */
   retryAttempts?: number;
   /**
-   * Delay between connection retry attempts (ms)
+   * Delay between dataSource retry attempts (ms)
    * Default: 3000
    */
   retryDelay?: number;
@@ -17,7 +17,7 @@ export type TypeOrmModuleOptions = {
    * attempt to connect upon failure.
    *
    * @param err error that was thrown
-   * @returns whether to retry connection or not
+   * @returns whether to retry dataSource or not
    */
   toRetry?: (err: any) => boolean;
   /**
@@ -25,14 +25,19 @@ export type TypeOrmModuleOptions = {
    */
   autoLoadEntities?: boolean;
   /**
-   * If `true`, connection will not be closed on application shutdown.
+   * If `true`, dataSource will not be closed on application shutdown.
    */
-  keepConnectionAlive?: boolean;
+  keepDataSourceAlive?: boolean;
   /**
-   * If `true`, will show verbose error messages on each connection retry.
+   * If `true`, will show verbose error messages on each dataSource retry.
    */
   verboseRetryLog?: boolean;
-} & Partial<ConnectionOptions>;
+
+  /**
+   * A name identifying that connection.
+   */
+  name?: string;
+} & Partial<DataSourceOptions>;
 
 export interface TypeOrmOptionsFactory {
   createTypeOrmOptions(
@@ -40,9 +45,9 @@ export interface TypeOrmOptionsFactory {
   ): Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions;
 }
 
-export type TypeOrmConnectionFactory = (
-  options?: ConnectionOptions,
-) => Promise<Connection>;
+export type TypeOrmDataSourceFactory = (
+  options?: DataSourceOptions,
+) => Promise<DataSource>;
 
 export interface TypeOrmModuleAsyncOptions
   extends Pick<ModuleMetadata, 'imports'> {
@@ -52,6 +57,6 @@ export interface TypeOrmModuleAsyncOptions
   useFactory?: (
     ...args: any[]
   ) => Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions;
-  connectionFactory?: TypeOrmConnectionFactory;
+  dataSourceFactory?: TypeOrmDataSourceFactory;
   inject?: any[];
 }
